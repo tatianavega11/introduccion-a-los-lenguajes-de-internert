@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>tatina ServicioS</title>
+        </head>
+        <body>
+            <!--esto es un comentario-->
+            <h1>Servicio de spa de belleza Tati's </h1>
+            <!--  -->
+            <h2>¿Que pedido quieres?</h2>
+        
+ <form action = "/PEDIDO-UÑAS" METHOD="POST">
+
+                <LABEL FOR="tipo_una"></LABEL>
+                <select name="tipo" id="tipo" required>
+                <option value="">Selecciona el tipo de uñas que quieres realizarte</option>
+                <option value="acr">acrilico</option>
+                <option value="gl">gel</option >
+                <option value="por">porcelana</option>
+                <option value="pos">postizas </option>
+                </select>
+                <LABEL FOR="nombre">Nombre</LABEL>
+                <input type="text" name="nombre" id= "Nombre" >
+                
+                <label for="apellido">Apellido</label>
+                <input type="text" name="Apellido" id="apellido "  >
+                <br>
+                <label for="celular">Numero celular</label>
+                <input type="text" name="celular" id= "celular">
+                <LABEL FOR="email">Correo</LABEL>
+                <input type="email" name="email" id= "Email" placeholder="ejemplo@gmail.com" required>
+             
+              
+ 
+                <label for="terminos">
+                <input type="checkbox" name="termnos" id="terminos" required>
+                Acepto los términos y condiciones </a>
+                </label>
+                <button type ="submit" value=" Enviar" id="btnrealizaarpedido">Realizar pedido</button>
+               
+ 
+ 
+            </form>
+        </body>
+        </html>
