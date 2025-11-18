@@ -1,17 +1,14 @@
 const PRODUCTS_API = 'https://fakestoreapi.com/products';
+const LOGIN_API = 'https://reqres.in/api/login';
 
-// Convertir precio USD a COP
-function formatPriceCOP(num) {
-  const precioCOP = num * 5000;
-  return '$' + precioCOP.toLocaleString('es-CO');
+function formatPrice(num) {
+  return '$' + Number(num).toFixed(2);
 }
 
-// Descripción personalizada
 function generateDescription(product) {
-  return ¡Descubre "${product.title}"! Perfecto para quienes buscan ${product.category}.;
+  return Descubre el "${product.title}" — ideal si estas buscando ${product.category}. Producto destacado por su calidad y precio.;
 }
 
-// Carrito
 const carrito = {
   items: [],
   agregarItem(product) {
@@ -52,17 +49,16 @@ const carrito = {
               <div>${it.qty}</div>
               <button data-action="inc" data-id="${it.id}">+</button>
             </div>
-            <div>${formatPriceCOP(it.price * it.qty)}</div>
+            <div>${formatPrice(it.price * it.qty)}</div>
           </div>`;
         cont.appendChild(row);
       });
     }
     document.getElementById('cart-total').textContent =
-      'Total: ' + formatPriceCOP(this.calcularTotal());
+      'Total: ' + formatPrice(this.calcularTotal());
   }
 };
 
-// Botones y cantidades
 document.addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
@@ -78,24 +74,23 @@ document.addEventListener('click', e => {
   }
 });
 
-// Cargar productos desde API
 async function cargarProductos() {
   try {
     const res = await fetch(PRODUCTS_API);
     const productos = await res.json();
-
+    
     const cont = document.getElementById('catalogo-productos');
     cont.innerHTML = '';
 
     productos.forEach(p => {
-      const desc = generateDescription(p);
       const card = document.createElement('article');
       card.className = 'card';
+      const desc = generateDescription(p);
       card.innerHTML = `
         <img src="${p.image}" alt="${p.title}">
         <h3>${p.title}</h3>
         <p>${desc}</p>
-        <div class="price">${formatPriceCOP(p.price)}</div>
+        <div class="price">${formatPrice(p.price)}</div>
         <footer>
           <small>Categoría: ${p.category}</small>
           <button class="btn" data-id="${p.id}" data-description="${desc}">Añadir al carrito</button>
@@ -108,14 +103,13 @@ async function cargarProductos() {
   }
 }
 
-// Añadir al carrito
 document.getElementById('catalogo-productos').addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
   const id = Number(btn.dataset.id);
   const card = btn.closest('.card');
   const title = card.querySelector('h3').textContent;
-  const price = Number(card.querySelector('.price').textContent.replace('$','').replace(/\./g,'')) / 5000;
+  const price = Number(card.querySelector('.price').textContent.replace('$', ''));
   const image = card.querySelector('img').src;
   const description = btn.dataset.description;
 
@@ -123,13 +117,11 @@ document.getElementById('catalogo-productos').addEventListener('click', e => {
   carrito.renderizarCarrito();
 });
 
-// Vaciar carrito
 document.getElementById('btn-clear').addEventListener('click', () => {
   carrito.items = [];
   carrito.renderizarCarrito();
 });
 
-// Checkout
 document.getElementById('btn-checkout').addEventListener('click', () => {
   if (carrito.items.length === 0) {
     alert('El carrito está vacío.');
@@ -141,35 +133,46 @@ document.getElementById('btn-checkout').addEventListener('click', () => {
   carrito.renderizarCarrito();
 });
 
-// Login simulado
 const btnLogin = document.getElementById('btn-login');
 const modal = document.getElementById('modal');
 const btnCancel = document.getElementById('btn-cancel');
 const userBadge = document.getElementById('user-badge');
 const userNameSpan = document.getElementById('user-name');
 
-btnLogin.addEventListener('click', () => modal.style.display = 'flex');
-btnCancel.addEventListener('click', () => modal.style.display = 'none');
+btnLogin.addEventListener('click', () => (modal.style.display = 'flex'));
+btnCancel.addEventListener('click', () => (modal.style.display = 'none'));
 
-document.getElementById('login-form').addEventListener('submit', e => {
+document.getElementById('login-form').addEventListener('submit', async e => {
   e.preventDefault();
   const email = document.getElementById('email').value.trim();
-  localStorage.setItem('token', 'fakeToken123');
-  localStorage.setItem('userEmail', email);
-  userBadge.style.display = 'inline-block';
-  userNameSpan.textContent = email;
-  modal.style.display = 'none';
-  alert('Login exitoso (simulado).');
+  const password = document.getElementById('password').value.trim();
+
+  try {
+    const res = await fetch(LOGIN_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error en login');
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userEmail', email);
+    userBadge.style.display = 'inline-block';
+    userNameSpan.textContent = email;
+    modal.style.display = 'none';
+    alert('Login exitoso.');
+  } catch (error) {
+    alert('Falló el inicio de sesión: ' + error.message);
+  }
 });
 
-// Iniciar
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
   const email = localStorage.getItem('userEmail');
   if (token && email) {
     userBadge.style.display = 'inline-block';
     userNameSpan.textContent = email;
   }
-  cargarProductos();
+  await cargarProductos();
   carrito.renderizarCarrito();
 });
