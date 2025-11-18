@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda Online Tatis</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Tienda Online Tatis</h1>
+    <div id="login-area">
+      <div id="user-badge" style="display:none">Conectado: <span id="user-name"></span></div>
+      <button class="btn" id="btn-login">Iniciar sesión</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2 id="catalogo-titulo">Catálogo</h2>
+      <div id="catalogo-productos"></div>
+    </section>
+
+    <aside id="carrito">
+      <h2>Carrito</h2>
+      <div id="cart-items" class="cart-items"></div>
+      <div id="cart-total" class="total">Total: $0.00</div>
+      <div class="acciones-carrito">
+        <button id="btn-clear" class="btn rojo">Vaciar</button>
+        <button id="btn-checkout" class="btn">Pagar</button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Modal de login -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h3>Iniciar sesión</h3>
+      <form id="login-form">
+        <label>Email</label>
+        <input type="email" id="email" required placeholder="juan@tienda.com">
+        <label>Contraseña</label>
+        <input type="password" id="password" required placeholder="123456">
+        <div class="acciones">
+          <button type="button" id="btn-cancel">Cancelar</button>
+          <button type="submit" class="btn">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
