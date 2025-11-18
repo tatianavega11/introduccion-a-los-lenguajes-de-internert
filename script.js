@@ -237,4 +237,3 @@ window.addEventListener("DOMContentLoaded", async () => {
   await cargarProductos();
   carrito.renderizarCarrito();
 });
-
