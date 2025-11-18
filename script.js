@@ -1,4 +1,5 @@
-const PRODUCTS_API = 'https://fakestoreapi.com/products';
+// API de productos
+const PRODUCTS_API = 'https://fakestoreapi.com/products'; // Puedes cambiar a otra API si lo deseas
 const LOGIN_API = 'https://reqres.in/api/login';
 
 function formatPrice(num) {
@@ -6,9 +7,10 @@ function formatPrice(num) {
 }
 
 function generateDescription(product) {
-  return Descubre el "${product.title}" — ideal si estas buscando ${product.category}. Producto destacado por su calidad y precio.;
+  return Descubre el "${product.title}" — ideal si estás buscando ${product.category}. Producto destacado por su calidad y precio.;
 }
 
+// Objeto carrito
 const carrito = {
   items: [],
   agregarItem(product) {
@@ -59,6 +61,7 @@ const carrito = {
   }
 };
 
+// Control de cantidad en el carrito
 document.addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
@@ -74,11 +77,12 @@ document.addEventListener('click', e => {
   }
 });
 
+// Cargar productos desde la API
 async function cargarProductos() {
   try {
     const res = await fetch(PRODUCTS_API);
     const productos = await res.json();
-    
+
     const cont = document.getElementById('catalogo-productos');
     cont.innerHTML = '';
 
@@ -97,12 +101,14 @@ async function cargarProductos() {
         </footer>`;
       cont.appendChild(card);
     });
-  } catch {
+  } catch (error) {
+    console.error('Error cargando productos:', error);
     document.getElementById('catalogo-productos').innerHTML =
       '<p style="color:#e53e3e">Error al cargar productos.</p>';
   }
 }
 
+// Añadir productos al carrito desde el catálogo
 document.getElementById('catalogo-productos').addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
@@ -117,11 +123,13 @@ document.getElementById('catalogo-productos').addEventListener('click', e => {
   carrito.renderizarCarrito();
 });
 
+// Vaciar carrito
 document.getElementById('btn-clear').addEventListener('click', () => {
   carrito.items = [];
   carrito.renderizarCarrito();
 });
 
+// Checkout (resumen de compra)
 document.getElementById('btn-checkout').addEventListener('click', () => {
   if (carrito.items.length === 0) {
     alert('El carrito está vacío.');
@@ -133,6 +141,7 @@ document.getElementById('btn-checkout').addEventListener('click', () => {
   carrito.renderizarCarrito();
 });
 
+// Modal de login
 const btnLogin = document.getElementById('btn-login');
 const modal = document.getElementById('modal');
 const btnCancel = document.getElementById('btn-cancel');
@@ -142,6 +151,7 @@ const userNameSpan = document.getElementById('user-name');
 btnLogin.addEventListener('click', () => (modal.style.display = 'flex'));
 btnCancel.addEventListener('click', () => (modal.style.display = 'none'));
 
+// Login con API pública (reqres)
 document.getElementById('login-form').addEventListener('submit', async e => {
   e.preventDefault();
   const email = document.getElementById('email').value.trim();
@@ -166,6 +176,7 @@ document.getElementById('login-form').addEventListener('submit', async e => {
   }
 });
 
+// Inicialización al cargar la página
 window.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
   const email = localStorage.getItem('userEmail');
@@ -176,3 +187,4 @@ window.addEventListener('DOMContentLoaded', async () => {
   await cargarProductos();
   carrito.renderizarCarrito();
 });
+
